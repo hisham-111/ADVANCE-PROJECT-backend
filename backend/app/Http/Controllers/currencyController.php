@@ -32,8 +32,12 @@ class currencyController extends Controller
     {
         try {
             $currency = new Currency;
-            $rate = $request->input('rate');
             $name = $request->input('name');
+            $request->validate([
+
+                'name' => 'required|in:$,£,€,L.L.'
+            ]);
+            $rate = $request->input('rate');
             $currency->rate = $rate;
             $currency->name = $name;
             $currency->save();
@@ -50,15 +54,12 @@ class currencyController extends Controller
     {
         try {
             $currency = Currency::findOrFail($id);
+            $inputs = $request->except('_method');
+            $currency->update($inputs);
             
-            $currency->name = $request->input('name');
-            $currency->rate = $request->input('rate');
-            $currency->save();
-            return response()->json([ 
-            'message' => 'Currency Updated successfully!',
-            'currency' => $currency,
-            ]); // successed response
-
+            return response()->json([
+                'currency' => $currency,
+            ]);
         }catch (\Exception $err) {
             return response()->json([
                 'message' => 'Error updating currency: ' . $err->getMessage(),  
