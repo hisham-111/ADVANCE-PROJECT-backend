@@ -3,6 +3,7 @@
 use App\Http\Controllers\currencyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\goalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
+Route::Post('/goal',[GoalController::class,'addGoal']);
+Route::Get('/goal/{id}',[GoalController::class,'getGoal']);
+Route::Patch('/goal/{id}',[GoalController::class,'editGoal']);
+Route::Delete('/goal/{id}',[GoalController::class,'deleteGoal']);
