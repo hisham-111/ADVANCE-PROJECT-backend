@@ -21,7 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::Post('/goal',[GoalController::class,'addGoal']);
+Route::post('/goal',[GoalController::class,'addGoal']);
 Route::Get('/goal/{id}',[GoalController::class,'getGoal']);
 Route::Patch('/goal/{id}',[GoalController::class,'editGoal']);
 Route::Delete('/goal/{id}',[GoalController::class,'deleteGoal']);

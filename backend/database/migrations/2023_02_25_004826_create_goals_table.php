@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('goals', function (Blueprint $table) {
             $table->id();
-            $table->floatval('amount');
+            $table->float('amount');
             $table->timestamps();
         });
     }
