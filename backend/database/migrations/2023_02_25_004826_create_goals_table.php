@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('goals', function (Blueprint $table) {
             $table->id();
-            $table->floatvalue('incomes');
-            $table->floatvalue('expenses');
+            $table->floatval('amount');
             $table->timestamps();
         });
     }

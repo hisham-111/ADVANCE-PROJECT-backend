@@ -11,8 +11,7 @@ class GoalController extends Controller
 
     public function addGoal(Request $request){
         $goal = new goal;
-        $incomes = $request->input('incomes');
-        $expenses = $request->input('expenses');
+        $amount = $request->input('amount');
         $goal->save();
         return response()->json([
             'message' => $request->all()
@@ -23,17 +22,17 @@ class GoalController extends Controller
 
 
     public function getGoal(Request $request, $id){
-        $goal = goal::find($id);
+        $goal = goal::find($id)->get();
 
         return response()->json([
             'message' => $goal
         ]);
     }
-}
+
 
 //********* Edit Goal *********
 
-    function editGoal(Request $request, $id){
+    public function editGoal(Request $request, $id){
 
         $goal = goal::find($id);
         $goal->update($input);
@@ -46,7 +45,7 @@ class GoalController extends Controller
 
 //*********  Detele Goal *********
 
-    function deleteGoal(Request $request, $id){
+    public function deleteGoal(Request $request, $id){
         $goal = categories::find($id);
         $goal->delete();
 
@@ -55,3 +54,4 @@ class GoalController extends Controller
         ]);
     }
 
+}
