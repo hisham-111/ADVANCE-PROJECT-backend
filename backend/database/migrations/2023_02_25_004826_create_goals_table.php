@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('goals', function (Blueprint $table) {
             $table->increments('id');
             $table->decimal('amount');
-            $table->bigint('currencyID');
-            $table->char('schedule');
+            $table->unsignedBigInteger('currency_id');
+            $table->foreign('currency_id')->references('id')->on('currencies');
+            $table->string('schedule');
             $table->timestamps();
         });
     }

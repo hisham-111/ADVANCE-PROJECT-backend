@@ -10,9 +10,9 @@ class GoalController extends Controller
     //********* Add Goal *********
 
     public function addGoal(Request $request){
-        $goal = new goal;
+        $goal = new goal();
         $goal->amount = $request->input('amount');
-        $goal->currencyID = $request->input('currencyID');
+        $goal->currency_id = $request->input('currency_id');
         $goal->schedule = $request->input('schedule');
         $goal->save();
         return response()->json([
@@ -40,7 +40,7 @@ class GoalController extends Controller
         $goal = goal::find($id);
         $inputs = $request->except('_method');
         $goal->update($inputs);
-
+        $inputs = $request;
         return response()->json([
             'message' => 'Goal updated successfully',
             'goal' => $goal

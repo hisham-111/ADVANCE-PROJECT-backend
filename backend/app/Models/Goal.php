@@ -10,7 +10,6 @@ class Goal extends Model
     use HasFactory;
     protected $fillable = [
         'amount',
-        'currencyID',
         'schedule',
 
     ];
