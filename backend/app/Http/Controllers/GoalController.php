@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\goal;
+use App\Models\Goal;
 
 class GoalController extends Controller
 {
@@ -12,12 +12,14 @@ class GoalController extends Controller
     public function addGoal(Request $request){
         $goal = new goal;
         $goal->amount = $request->input('amount');
+        $goal->currencyID = $request->input('currencyID');
+        $goal->schedule = $request->input('schedule');
         $goal->save();
         return response()->json([
             'message' => $request->all()
         ]);
     }
-    
+
 
 //********* Get Goal *********
 

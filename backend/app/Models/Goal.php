@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class goal extends Model
+class Goal extends Model
 {
     use HasFactory;
     protected $fillable = [
         'amount',
+        'currencyID',
+        'schedule',
 
     ];
 }

@@ -12,8 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('goals', function (Blueprint $table) {
-            $table->id();
-            $table->float('amount');
+            $table->increments('id');
+            $table->decimal('amount');
+            $table->bigint('currencyID');
+            $table->char('schedule');
             $table->timestamps();
         });
     }
