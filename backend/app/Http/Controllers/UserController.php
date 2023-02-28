@@ -1,93 +1,116 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
-use Hash;
-use Session;
-use Illuminate\Support\Facades\Auth;
-
 use App\Models\User;
-
 
 class UserController extends Controller
 {
-
     public function getAllUser() 
     {
-        $users = User::all();
-        return response()->json([
-            'users' => $users,
-        ]);
+        $user= user::all();
+        return response()->json(['user' => $user,]);
     }
 
+
+    public function getUser(Request $request, $id) 
+    {
+        try {
+            $user = user::findOrFail($id == 'user');
     
-   
-    // public function index()
-    // {
-    //     $users = User::latest()->paginate(5);
-    
-    //     return view('user.index',compact('users'))
-    //         ->with('i', (request()->input('page', 1) - 1) * 5);
-    // }
-     
-    
-    // public function create()
-    // {
-    //     return view('user.create');
-    // }
-    
-   
-    // public function store(Request $request)
-    // {
-    //     $request->validate([
-    //         'name' => 'required',
-    //         'email' => 'required',
-    //     ]);
-    
-    //     User::create($request->all());
-     
-    //     return redirect()->route('user.index')
-    //                     ->with('success','User created successfully.');
-    // }
-     
+            return response()->json(['message' => $user,]);
+
+        } catch (\Exception $err) {
+            return response()->json(['error' => 'USER NOT FOUND',] , 404); 
+        }
+    }
 
 
-    
-    
-    // public function show(User $user)
-    // {
-    //     return view('user.show',compact('user'));
-    // } 
-     
-   
-    // public function edit(User $user)
-    // {
-    //     return view('user.edit',compact('user'));
-    // }
-    
-   
-    // public function update(Request $request, User $user)
-    // {
-    //     $request->validate([
-    //         'name' => 'required',
-    //         'email' => 'required',
-    //     ]);
-    
-    //     $user->update($request->all());
-    
-    //     return redirect()->route('users.index')
-    //                     ->with('success','User updated successfully');
-    // }
-    
-   
-    // public function destroyUser(User $user)
-    // {
-    //     $user->delete();
-    
-    //     return redirect()->route('user.index')
-    //      ->with('success','User deleted successfully');
-    // } 
 
+
+
+
+    public function CreateUser(Request $request ){
+        try {
+
+        $user = new user;
+        
     
-      
+        $fullname = $request->input('fullname');
+        $email = $request->input('email');
+        $password = $request->input('password');
+
+        $user->fullname = $fullname;
+        $user->email = $email;
+        $user->password = $password;
+
+        $user->save();
+
+        return response()->json([
+            'message' => 'user created successfully!',
+        ]);
+
+    }catch (\Exception $err) {
+        return response()->json(['message' => 'Error adding user: '. $err->getMessage(),], 500); 
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // public function update(Request $request, $id)
+            // {
+            //     $update = [
+            //         "name"=>$request->name,
+            //         "email"=>$request->email,
+            //         "password"=>$request->password,
+            //     ];
+            //     User::where('id', $id)->update($update);
+            //     $msg = "User Updated successful! ";
+            //     return redirect('user')->with('msg', $msg);
+            // }
+
+
+        public function editUser(Request $request, $id)
+        {
+            try {
+                $user = user::findOrFail($id);
+                $inputs = $request->except('_method');
+                $user->update($inputs);
+                
+                return response()->json([
+                    'user' => $user,
+                ]);
+
+            }catch (\Exception $err) {
+                return response()->json([
+                    'message' => 'Error updating user: ' . $err->getMessage(), ], 500); 
+            }
+        }
+
+
+        public function destroyUser(Request $request, $id)
+        {
+            $user =  user::find($id);
+            $user->delete();
+
+            return response()->json([
+            'message' => 'user deleted Successfully!',
+        ]);
+
+
+        }
 }

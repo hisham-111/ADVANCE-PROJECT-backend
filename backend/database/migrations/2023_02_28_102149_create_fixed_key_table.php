@@ -1,8 +1,3 @@
-
-
-
-
-
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -16,19 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('currencies', function (Blueprint $table) {
-            $table->id();           
-            $table->char('name',5);
-            $table->float('rate')->unsigned();
+        Schema::create('fixed_key', function (Blueprint $table) {
+            $table->id();
+            $table-> string('title',15);
+            $table-> string('description',150);
+            $table->boolean('isActive');
             $table->timestamps();
         });
     }
-
+    
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('currencies');
+        Schema::dropIfExists('fixed_key');
     }
 };

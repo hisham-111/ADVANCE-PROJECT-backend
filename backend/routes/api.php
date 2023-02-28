@@ -3,7 +3,7 @@
 use App\Http\Controllers\currencyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,5 +18,15 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+
+//controller
+Route::Get('/user',[UserController::class,'getAllUser']);
+Route::Get('/user/{id}',[UserController::class,'getUser']);
+Route::Post('/user',[UserController::class,'CreateUser']);
+Route::Patch('/user/{id}',[UserController::class,'editUser']);
+
+
 
 
