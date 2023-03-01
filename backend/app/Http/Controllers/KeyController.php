@@ -35,19 +35,18 @@ class KeyController extends Controller
                 $key = new Key;
                 $title = $request->input('title');
                 $description = $request->input('description');
-
+                $isActive = $request->input('isActive' , true);
 
                 $key->title = $title;
                 $key->description = $description;
+                $key->isActive = $isActive;
                 $key->save();
 
                 return response()->json([ 
                     'message' => 'Fixed_key Added successfully!'. $title. ' '. $description,  
                 ]);
             } catch (\Exception $err) {
-                return response()->json([
-                    'message' => 'Error adding Fixed_key: ' . $err->getMessage(),  
-                ], 500); 
+                return response()->json(['message' => 'Error adding Fixed_key: ' . $err->getMessage(),  ], 500); 
             }
         }
 

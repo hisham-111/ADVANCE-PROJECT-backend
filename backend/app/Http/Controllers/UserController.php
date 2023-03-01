@@ -38,11 +38,12 @@ class UserController extends Controller
         $fullname = $request->input('fullname');
         $email = $request->input('email');
         $password = $request->input('password');
+        $isSuper = $request->input('isSuper' , true);
 
         $user->fullname = $fullname;
         $user->email = $email;
         $user->password = $password;
-
+        $user->isSuper = $isSuper;
         $user->save();
 
         return response()->json([
@@ -63,14 +64,18 @@ class UserController extends Controller
                 $user = User::findOrFail($id);
                 $inputs = $request->except('_method');
                 $user->update($inputs);
-                
+
+                //start_check if is admin
+                $isSuper = $request->input('isSuper' , false);
+                $user->isSuper = $isSuper;
+                //end_check if is admin
+
+
                 return response()->json([
                     'user' => $user,
                 ]);
             }catch (\Exception $err) {
-                return response()->json([
-                    'message' => 'Error updating user: ' . $err->getMessage(),  
-                ], 500); 
+                return response()->json(['message' => 'Error updating user: ' . $err->getMessage(), ], 500); 
             }
         }
 
