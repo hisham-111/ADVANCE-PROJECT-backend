@@ -108,5 +108,35 @@ public function addFixedTransaction(Request $request)
         }
     }
 
+    public function getBy(Request $request)
+{
+    $query = FixedTransaction::query();
+
+    if ($request->has('start_date')) {
+        $query->where('start_date', $request->input('start_date'));
+    }
+
+    if ($request->has('amount')) {
+        $query->where('amount', $request->input('amount'));
+    }
+
+    if ($request->has('schedule')) {
+        $query->where('schedule', $request->input('schedule'));
+    }
+
+    if ($request->has('next_payment_date')) {
+        $query->where('next_payment_date', $request->input('next_payment_date'));
+    }
+
+    if ($request->has('is_paid')) {
+        $query->where('is_paid', $request->input('is_paid'));
+    }
+
+    $transactions = $query->get();
+
+    return response()->json($transactions);
+}
+
+
 }
 
