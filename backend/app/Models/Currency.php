@@ -12,5 +12,11 @@ class Currency extends Model
         'rate',
         'name',  
     ];
+    
+    public function recurring(){
+        
+
+        return $this->belongsToMany(Recurring::class);
+    }
 
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\currencyController;
+use App\Http\Controllers\RecurringController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,3 +21,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
+Route::get('/recurrings',[RecurringController::class,'index']);
+Route::get('/recurrings/{id}',[RecurringController::class,'show']);
+Route::post('/recurrings',[RecurringController::class,'store']);
+Route::patch('/recurrings/{id}',[RecurringController::class,'edit']);
+Route::delete('/recurrings/{id}',[RecurringController::class,'delete']);
