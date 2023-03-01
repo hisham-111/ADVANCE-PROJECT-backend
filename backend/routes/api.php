@@ -20,9 +20,5 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::post('/fixedtransaction',[FixedTransactionController::class,'addFixedTransaction']);
-Route::patch('/fixedtransaction/{id}',[FixedTransactionController::class,'editFixedTransaction']);
-Route::delete('/fixedtransaction/{id}',[FixedTransactionController::class,'deleteFixedTransaction']);
-Route::get('/fixedtransaction',[FixedTransactionController::class,'getAllFixedTransactions']);
-Route::get('/fixedtransaction/{id}',[FixedTransactionController::class,'getFixedTransaction']);
+
 
