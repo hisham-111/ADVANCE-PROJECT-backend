@@ -12,19 +12,32 @@ class categoryController extends Controller
 
     public function addCategory(Request $request){
         $category = new category();
+        $request->validate([
+            'type_code' => 'required|in:incomes,expenses'
+        ]);
         $category->name = $request->input('name');
+        $category->type_code = $request->input('type_code');
         $category->save();
         return response()->json([
             'message' => $request->all()
         ]);
     }
 
+//********* Get All categories *********
+
+  public function getAllCategory() // returns all currencies
+    {
+        $categories = category::all();
+        return response()->json([
+            'categories' => $categories,
+        ]);
+    }
 
 //********* Get category *********
 
 
     public function getCategory(Request $request, $id){
-        $category = category::find($id)->get();
+        $category = category::find($id);
 
         return response()->json([
             'message' => $category

@@ -20,16 +20,31 @@ class GoalController extends Controller
         ]);
     }
 
+//********* Get All Goals *********
+
+    public function getAllgoal() // returns all currencies
+    {
+        $goals = goal::all();
+        return response()->json([
+            'goals' => $goals,
+        ]);
+    }
 
 //********* Get Goal *********
 
 
     public function getGoal(Request $request, $id){
-        $goal = goal::find($id)->get();
+        try {
+        $goal = goal::findOrFail($id);
 
         return response()->json([
             'message' => $goal
         ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => 'goal failed',
+        ], 404);
+        }
     }
 
 
