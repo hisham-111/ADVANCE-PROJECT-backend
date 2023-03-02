@@ -1,10 +1,16 @@
 <?php
 
 use App\Http\Controllers\currencyController;
+use App\Http\Controllers\FixedTransactionController;
+use App\Models\FixedTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\KeyController;
+use App\Http\Controllers\GoalController;
+use App\Http\Controllers\categoryController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +26,12 @@ use App\Http\Controllers\KeyController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
+Route::post('/fixedtransaction',[FixedTransactionController::class,'addFixedTransaction']);
+Route::patch('/fixedtransaction/{id}',[FixedTransactionController::class,'editFixedTransaction']);
+Route::delete('/fixedtransaction/{id}',[FixedTransactionController::class,'deleteFixedTransaction']);
+Route::get('/fixedtransaction',[FixedTransactionController::class,'getAllFixedTransactions']);
+Route::get('/fixedtransaction/{id}',[FixedTransactionController::class,'getFixedTransactionById']);
+Route::get('/fixedtransaction', [FixedTransactionController::class,'getBy']);
 
 
 //UserController
