@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\FixedTransaction;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
+
+
 class FixedTransactionController extends Controller
 {
 
@@ -19,9 +22,18 @@ public function addFixedTransaction(Request $request)
         $schedule = $request->input('schedule');
         $is_paid = $request->input('is_paid', false);
 
-        $request->validate([
-            'schedule' => 'required|in:weekly,monthly,yearly'
+        $validator = Validator::make($request->all(), [
+            'schedule' => 'required|in:weekly,monthly,yearly',
+            'fixed_key_id' => 'required|exists:fixed_key',
+            'amount' => 'required|numeric',
+            'is_paid' =>  'required|boolean',
+            'currency_id'=> 'required|exists:currencies,id',
         ]);
+        if($validator->fails()){
+            $respond['message'] = $validator->errors();
+            return $respond;
+        }
+        
 
         $fixed_transaction->amount = $amount;
         $fixed_transaction->start_date = $start_date;
@@ -67,6 +79,18 @@ public function addFixedTransaction(Request $request)
             $fixed_transaction = FixedTransaction::findOrFail($id);
             $inputs = $request->except('_method');
             $fixed_transaction->update($inputs);
+
+            $validator = Validator::make($request->all(), [
+                'schedule' => 'in:weekly,monthly,yearly',
+                'fixed_key_id' => 'exists:fixed_key',
+                'amount' => 'numeric',
+                'is_paid' =>  'boolean',
+                'currency_id'=> 'exists:currencies,id',
+            ]);
+            if($validator->fails()){
+                $respond['message'] = $validator->errors();
+                return $respond;
+            }
             
             return response()->json([
                 'message' => $fixed_transaction,
