@@ -24,7 +24,7 @@ return new class extends Migration
             $table->boolean('is_paid')->default(false);
 
             $table->unsignedBigInteger('currency_id');
-            $table-foreign('currency_id')->references('id')->on('fixed_keys');
+            $table->foreign('currency_id')->references('id')->on('fixed_keys');
 
             $table->unsignedBigInteger('fixed_key_id');
             $table->foreign('fixed_key_id')->references('id')->on('fixed_key');
