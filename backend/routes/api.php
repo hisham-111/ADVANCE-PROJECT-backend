@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\KeyController;
+use App\Http\Controllers\AuthController;
+
 use App\Http\Controllers\GoalController;
 use App\Http\Controllers\categoryController;
 
@@ -53,5 +55,17 @@ Route::Get('/key/{id}',[KeyController::class,'getFixed_key']);
 Route::Post('/key',[KeyController::class,'CreatFixed_Key']);
 Route::delete('/key/{id}',[KeyController::class,'destroyFixed_Key']);
 Route::Patch('/key/{id}',[KeyController::class,'editFixed_Key']);
+
+
+
+
+// AuthenticationController
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('user', [AuthController::class, 'user']);
+    Route::post('logout', [AuthController::class, 'logout']);
+});
 
 
