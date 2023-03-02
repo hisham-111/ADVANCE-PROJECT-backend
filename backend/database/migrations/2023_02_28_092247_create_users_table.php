@@ -16,7 +16,7 @@ return new class extends Migration
             $table->increments('id');
             $table->string('fullname');
             $table->string('email')->unique();
-            $table->string('password',16);
+            $table->string('password');
             $table->boolean('isSuper')->default(0);
             $table->timestamps();
         });

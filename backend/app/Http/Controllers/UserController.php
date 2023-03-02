@@ -38,6 +38,9 @@ class UserController extends Controller
         $fullname = $request->input('fullname');
         $email = $request->input('email');
         $password = $request->input('password');
+        $request->validate([
+            'password' => 'required|string|min:8|max:16',
+       ]);
         $isSuper = $request->input('isSuper' , true);
 
         $user->fullname = $fullname;
