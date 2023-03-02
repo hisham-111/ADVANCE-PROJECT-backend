@@ -5,8 +5,12 @@ use App\Http\Controllers\FixedTransactionController;
 use App\Models\FixedTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\KeyController;
 use App\Http\Controllers\GoalController;
 use App\Http\Controllers\categoryController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -28,4 +32,26 @@ Route::delete('/fixedtransaction/{id}',[FixedTransactionController::class,'delet
 Route::get('/fixedtransaction',[FixedTransactionController::class,'getAllFixedTransactions']);
 Route::get('/fixedtransaction/{id}',[FixedTransactionController::class,'getFixedTransactionById']);
 Route::get('/fixedtransaction', [FixedTransactionController::class,'getBy']);
+
+
+//UserController
+Route::Get('/user',[UserController::class,'getAllUser']);
+Route::Get('/user/{id}',[UserController::class,'getUser']);
+Route::Post('/user',[UserController::class,'CreateUser']);
+Route::delete('/user/{id}',[UserController::class,'destroyUser']);
+Route::Patch('/user/{id}',[UserController::class,'editUser']);
+
+
+
+
+
+
+
+//KeyController
+Route::Get('/key',[KeyController::class,'getAllFixed_Key']);
+Route::Get('/key/{id}',[KeyController::class,'getFixed_key']);
+Route::Post('/key',[KeyController::class,'CreatFixed_Key']);
+Route::delete('/key/{id}',[KeyController::class,'destroyFixed_Key']);
+Route::Patch('/key/{id}',[KeyController::class,'editFixed_Key']);
+
 
