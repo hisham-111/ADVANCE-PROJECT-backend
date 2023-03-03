@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\currencyController;
+use App\Http\Controllers\RecurringController;
 use App\Http\Controllers\FixedTransactionController;
 use App\Models\FixedTransaction;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -68,4 +70,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
 });
 
+Route::get('/currency',[currencyController::class,'getAllCurrency']);
+Route::get('/currency/{id}',[currencyController::class,'getCurrency']);
+Route::post('/currency',[currencyController::class,'addCurrency']);
+Route::patch('/currency/{id}',[currencyController::class,'editCurrency']);
+Route::delete('/currency/{id}',[currencyController::class,'deleteCurrency']);
 
+Route::get('/recurrings',[RecurringController::class,'index']);
+Route::get('/recurrings/{id}',[RecurringController::class,'show']);
+Route::post('/recurrings',[RecurringController::class,'store']);
+Route::patch('/recurrings/{id}',[RecurringController::class,'edit']);
+Route::delete('/recurrings/{id}',[RecurringController::class,'delete']);
