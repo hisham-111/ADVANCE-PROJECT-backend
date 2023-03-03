@@ -3,18 +3,14 @@
 use App\Http\Controllers\currencyController;
 use App\Http\Controllers\RecurringController;
 use App\Http\Controllers\FixedTransactionController;
-use App\Models\FixedTransaction;
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\KeyController;
 use App\Http\Controllers\AuthController;
-
 use App\Http\Controllers\GoalController;
 use App\Http\Controllers\categoryController;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,21 +41,12 @@ Route::Post('/user',[UserController::class,'CreateUser']);
 Route::delete('/user/{id}',[UserController::class,'destroyUser']);
 Route::Patch('/user/{id}',[UserController::class,'editUser']);
 
-
-
-
-
-
-
 //KeyController
 Route::Get('/key',[KeyController::class,'getAllFixed_Key']);
 Route::Get('/key/{id}',[KeyController::class,'getFixed_key']);
 Route::Post('/key',[KeyController::class,'CreatFixed_Key']);
 Route::delete('/key/{id}',[KeyController::class,'destroyFixed_Key']);
 Route::Patch('/key/{id}',[KeyController::class,'editFixed_Key']);
-
-
-
 
 // AuthenticationController
 Route::post('register', [AuthController::class, 'register']);
@@ -70,14 +57,30 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
 });
 
+//Currency Routes
 Route::get('/currency',[currencyController::class,'getAllCurrency']);
 Route::get('/currency/{id}',[currencyController::class,'getCurrency']);
 Route::post('/currency',[currencyController::class,'addCurrency']);
 Route::patch('/currency/{id}',[currencyController::class,'editCurrency']);
 Route::delete('/currency/{id}',[currencyController::class,'deleteCurrency']);
 
+//Recurrings Routes
 Route::get('/recurrings',[RecurringController::class,'index']);
 Route::get('/recurrings/{id}',[RecurringController::class,'show']);
 Route::post('/recurrings',[RecurringController::class,'store']);
 Route::patch('/recurrings/{id}',[RecurringController::class,'edit']);
 Route::delete('/recurrings/{id}',[RecurringController::class,'delete']);
+
+//Cataegories Routes
+Route::get('/categories',[categoryController::class,'getAllCategory']);
+Route::get('/categories/{id}',[categoryController::class,'getCategory']);
+Route::post('/categories',[categoryController::class,'addCategory']);
+Route::patch('/categories/{id}',[categoryController::class,'editCategory']);
+Route::delete('/categories/{id}',[categoryController::class,'deleteCategory']);
+
+//Goal Routes
+Route::get('/goal',[GoalController::class,'getAllgoal']);
+Route::get('/goal/{id}',[GoalController::class,'getGoal']);
+Route::post('/goal',[GoalController::class,'addGoal']);
+Route::patch('/goal/{id}',[GoalController::class,'editGoal']);
+Route::delete('/goal/{id}',[GoalController::class,'deleteGoal']);
