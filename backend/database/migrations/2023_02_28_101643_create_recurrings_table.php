@@ -20,8 +20,8 @@ return new class extends Migration
             $table->foreign('currency_id')->references('id')->on('currencies');
             $table->date('end_date')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->date('start_date')->default(DB::raw('CURRENT_TIMESTAMP'));
-            // $table->unsignedBigInteger('category_id');
-            // $table->foreign('category_id')->references('id')->on('categories');
+            $table->unsignedBigInteger('category_id');
+            $table->foreign('category_id')->references('id')->on('categories');
             $table->timestamps();
         });
     }

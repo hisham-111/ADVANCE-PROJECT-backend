@@ -10,6 +10,12 @@ class category extends Model
     use HasFactory;
     protected $fillable = [
         'name',
+        'type_code',
     ];
+    public function recurring(){
+        
+
+        return $this->belongsToMany(Recurring::class);
+    }
 
 }
