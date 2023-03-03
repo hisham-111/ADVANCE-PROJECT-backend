@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
@@ -28,37 +32,72 @@ class UserController extends Controller
     }
 
 
+        // register
+        public function register(Request $request ){
+            try {
 
-    public function CreateUser(Request $request ){
-        try {
-
-        $user = new User;
+            $user = new User;
+            $fullname = $request->input('fullname');
+            $email = $request->input('email');
         
-    
-        $fullname = $request->input('fullname');
-        $email = $request->input('email');
-        $password = $request->input('password');
-        $request->validate([
-            'password' => 'required|string|min:8|max:16',
-       ]);
-        $isSuper = $request->input('isSuper' , true);
+            $password = Hash::make($request->input('password'));
+            $request->validate([
+                'email' => 'required|regex:/(.+)@(.+)\.(.+)/i',
+                'password' => 'required|string|min:8|max:16',
 
-        $user->fullname = $fullname;
-        $user->email = $email;
-        $user->password = $password;
-        $user->isSuper = $isSuper;
-        $user->save();
+            ]);
+            $isSuper = $request->input('isSuper' , true);
+            
+            $user->fullname = $fullname;
+            $user->email = $email;
+            $user->password = $password;
+            $user->isSuper = $isSuper;
+            $user->save();
 
-        return response()->json([
-            'message' => 'user created successfully!',
-        ]);
+            return response()->json([
+                'message' => 'user created successfully!',
+            ]);
 
-    }catch (\Exception $err) {
-        return response()->json(['message' => 'Error adding user: '. $err->getMessage(),], 500); 
+        }catch (\Exception $err) {
+            return response()->json(['message' => 'Error adding user: '. $err->getMessage(),], 500); 
+        }
     }
-}
 
+        // login
 
+        public function login(Request $request)
+        {
+            if (!Auth::attempt($request->only('email', 'password'))) {
+                return response([
+                    'message' => 'Invalid credentials!'
+                ], Response::HTTP_UNAUTHORIZED);
+            }
+
+            $user = Auth::user();
+
+            $token = $user->createToken('token')->plainTextToken;
+
+            $cookie = cookie('jwt', $token, 60 * 24); // 1 day
+
+            return response([
+                'message' => $token
+            ])->withCookie($cookie);
+        }
+
+        // logout
+        public function logout()
+        {
+            $cookie = Cookie::forget('jwt');
+
+            return response([
+                'message' => 'Success'
+            ])->withCookie($cookie);
+        }
+
+        public function user()
+        {
+            return Auth::user();
+        }
 
 
         public function editUser(Request $request, $id)
@@ -72,6 +111,10 @@ class UserController extends Controller
                 $isSuper = $request->input('isSuper' , false);
                 $user->isSuper = $isSuper;
                 //end_check if is admin
+                $request->validate([
+                    'email' => 'required|regex:/(.+)@(.+)\.(.+)/i',
+                    'password' => 'required|string|min:8|max:16',
+                ]);
 
 
                 return response()->json([
