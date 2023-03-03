@@ -1,8 +1,3 @@
-
-
-
-
-
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -16,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('currencies', function (Blueprint $table) {
-            $table->id();           
-            $table->char('name',5);
-            $table->float('rate')->unsigned();
+        Schema::create('keys', function (Blueprint $table) {
+            $table->increments('id');
+            $table-> string('title',15);
+            $table-> string('description',150);
+            $table->boolean('isActive')->default(true);
             $table->timestamps();
         });
     }
@@ -29,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('currencies');
+        Schema::dropIfExists('keys');
     }
 };

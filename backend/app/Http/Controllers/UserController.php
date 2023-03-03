@@ -1,93 +1,98 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
-use Hash;
-use Session;
-use Illuminate\Support\Facades\Auth;
-
 use App\Models\User;
-
 
 class UserController extends Controller
 {
-
     public function getAllUser() 
     {
-        $users = User::all();
-        return response()->json([
-            'users' => $users,
-        ]);
+        $user= user::all();
+        return response()->json(['user' => $user,]);
     }
 
-    
-   
-    // public function index()
-    // {
-    //     $users = User::latest()->paginate(5);
-    
-    //     return view('user.index',compact('users'))
-    //         ->with('i', (request()->input('page', 1) - 1) * 5);
-    // }
-     
-    
-    // public function create()
-    // {
-    //     return view('user.create');
-    // }
-    
-   
-    // public function store(Request $request)
-    // {
-    //     $request->validate([
-    //         'name' => 'required',
-    //         'email' => 'required',
-    //     ]);
-    
-    //     User::create($request->all());
-     
-    //     return redirect()->route('user.index')
-    //                     ->with('success','User created successfully.');
-    // }
-     
 
+    public function getUser(Request $request, $id){
+        try{
+             $user =  user::find($id);
+  
+             return response()->json(['message' => $user,]);
 
-    
-    
-    // public function show(User $user)
-    // {
-    //     return view('user.show',compact('user'));
-    // } 
-     
-   
-    // public function edit(User $user)
-    // {
-    //     return view('user.edit',compact('user'));
-    // }
-    
-   
-    // public function update(Request $request, User $user)
-    // {
-    //     $request->validate([
-    //         'name' => 'required',
-    //         'email' => 'required',
-    //     ]);
-    
-    //     $user->update($request->all());
-    
-    //     return redirect()->route('users.index')
-    //                     ->with('success','User updated successfully');
-    // }
-    
-   
-    // public function destroyUser(User $user)
-    // {
-    //     $user->delete();
-    
-    //     return redirect()->route('user.index')
-    //      ->with('success','User deleted successfully');
-    // } 
+        } catch(\Exception $err){
+            return response()->json(['error' => 'USER NOT FOUND',] , 404); 
 
-    
+        }
       
+    }
+
+
+
+    public function CreateUser(Request $request ){
+        try {
+
+        $user = new User;
+        
+    
+        $fullname = $request->input('fullname');
+        $email = $request->input('email');
+        $password = $request->input('password');
+        $request->validate([
+            'password' => 'required|string|min:8|max:16',
+       ]);
+        $isSuper = $request->input('isSuper' , true);
+
+        $user->fullname = $fullname;
+        $user->email = $email;
+        $user->password = $password;
+        $user->isSuper = $isSuper;
+        $user->save();
+
+        return response()->json([
+            'message' => 'user created successfully!',
+        ]);
+
+    }catch (\Exception $err) {
+        return response()->json(['message' => 'Error adding user: '. $err->getMessage(),], 500); 
+    }
+}
+
+
+
+
+        public function editUser(Request $request, $id)
+        {
+            try {
+                $user = User::findOrFail($id);
+                $inputs = $request->except('_method');
+                $user->update($inputs);
+
+                //start_check if is admin
+                $isSuper = $request->input('isSuper' , false);
+                $user->isSuper = $isSuper;
+                //end_check if is admin
+
+
+                return response()->json([
+                    'user' => $user,
+                ]);
+            }catch (\Exception $err) {
+                return response()->json(['message' => 'Error updating user: ' . $err->getMessage(), ], 500); 
+            }
+        }
+
+   
+         
+        public function destroyUser(Request $request, $id){
+         
+            $user =  User::find($id);
+            $user->delete();
+            return response()->json([
+                'message' => 'User deleted Successfully!',
+         
+            ]);
+        }
+
+       
 }
