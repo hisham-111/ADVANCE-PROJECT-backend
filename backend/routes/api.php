@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\KeyController;
-use App\Http\Controllers\AuthController;
+
 
 use App\Http\Controllers\GoalController;
 use App\Http\Controllers\categoryController;
@@ -42,14 +42,11 @@ Route::get('/fixedtransaction', [FixedTransactionController::class,'getBy']);
 //UserController
 Route::Get('/user',[UserController::class,'getAllUser']);
 Route::Get('/user/{id}',[UserController::class,'getUser']);
-Route::Post('/user',[UserController::class,'CreateUser']);
 Route::post('register', [UserController::class, 'register']);
 Route::post('login', [UserController::class, 'login']);
-
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('logout', [UserController::class, 'logout']);
+Route::post('logout', [UserController::class, 'logout']);
 });
-
 Route::delete('/user/{id}',[UserController::class,'destroyUser']);
 Route::Patch('/user/{id}',[UserController::class,'editUser']);
 

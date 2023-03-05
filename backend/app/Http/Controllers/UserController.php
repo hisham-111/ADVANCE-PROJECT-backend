@@ -37,13 +37,15 @@ class UserController extends Controller
             try {
 
             $user = new User;
+           
             $fullname = $request->input('fullname');
             $email = $request->input('email');
         
             $password = Hash::make($request->input('password'));
             $request->validate([
-                'email' => 'required|regex:/(.+)@(.+)\.(.+)/i',
-                'password' => 'required|string|min:8|max:16',
+                'name' => 'required'|'string', 
+                'email' => 'String|required|email',
+                'password' => 'required|min:8|max:16|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
 
             ]);
             $isSuper = $request->input('isSuper' , true);
@@ -67,12 +69,22 @@ class UserController extends Controller
 
         public function login(Request $request)
         {
+       
+
+        // ===================
+        $this->validate($request, [
+            'email'              => 'String|required|email',
+            'password'           => 'String|required|min:8|max:16|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/'
+        ]);
+        // =====================
+
             if (!Auth::attempt($request->only('email', 'password'))) {
                 return response([
                     'message' => 'Invalid credentials!'
                 ], Response::HTTP_UNAUTHORIZED);
             }
-
+            
+          
             $user = Auth::user();
 
             $token = $user->createToken('token')->plainTextToken;
@@ -100,30 +112,55 @@ class UserController extends Controller
         }
 
 
+
+
+
+
+
         public function editUser(Request $request, $id)
         {
-            try {
-                $user = User::findOrFail($id);
-                $inputs = $request->except('_method');
-                $user->update($inputs);
+            try{
+                $user = user::find($id);
+                $user->fullname =  $request->get('fullname');
+                $user->email = $request->get('email');
+                $user->password = $request->get('password');
+                $user['password'] = Hash::make($user['password']);
 
-                //start_check if is admin
-                $isSuper = $request->input('isSuper' , false);
-                $user->isSuper = $isSuper;
-                //end_check if is admin
                 $request->validate([
-                    'email' => 'required|regex:/(.+)@(.+)\.(.+)/i',
-                    'password' => 'required|string|min:8|max:16',
+                    'name' => 'required'|'string', 
+                    'email' => 'String|required|email',
+                    'password' => 'required|min:8|max:16|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+    
                 ]);
-
-
+                $user->save();
                 return response()->json([
-                    'user' => $user,
+                    'user' => $user ,
+                    'message' => 'user edited successfully!',
                 ]);
+
             }catch (\Exception $err) {
-                return response()->json(['message' => 'Error updating user: ' . $err->getMessage(), ], 500); 
+                return response()->json([
+                    'message' => 'Error updating Fixed_key: ' . $err->getMessage(),  
+                ], 500); 
             }
+          
+              
+              
+           
         }
+
+        // public function editUser($id, Request $request){
+        //     //validate post data
+        //     $this->validate($request, [
+        //         'email' => 'required|email',
+        //         'password' => 'required|confirmed|min:6',
+        //     ]);
+        //     $user = $request->only(["email","password"]);
+        //     $user['password'] = Hash::make($user['password']);
+        //     User::find($id)->update($user);
+        //     // Session::flash('success_msg', 'User details updated successfully!');
+        //     return redirect()->route('admin.user');
+        // }
 
    
          
