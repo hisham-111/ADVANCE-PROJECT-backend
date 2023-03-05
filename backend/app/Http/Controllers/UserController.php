@@ -44,7 +44,7 @@ class UserController extends Controller
             $password = Hash::make($request->input('password'));
             $request->validate([
                 'name' => 'required'|'string', 
-                'email' => 'String|required|email',
+                'email' => 'String|required|email|regex:/(.+)@(.+)\.(.+)/i',
                 'password' => 'required|min:8|max:16|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
 
             ]);
@@ -65,22 +65,18 @@ class UserController extends Controller
         }
     }
 
+
+
+
         // login
 
         public function login(Request $request)
         {
        
-
-        // ===================
-        $this->validate($request, [
-            'email'              => 'String|required|email',
-            'password'           => 'String|required|min:8|max:16|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/'
-        ]);
-        // =====================
-
+      
             if (!Auth::attempt($request->only('email', 'password'))) {
                 return response([
-                    'message' => 'Invalid credentials!'
+                    'message' => 'Invalid credentials || Check if your email or password are invalid !'
                 ], Response::HTTP_UNAUTHORIZED);
             }
             
@@ -92,7 +88,7 @@ class UserController extends Controller
             $cookie = cookie('jwt', $token, 60 * 24); // 1 day
 
             return response([
-                'message' => $token
+                'message' => $token 
             ])->withCookie($cookie);
         }
 
