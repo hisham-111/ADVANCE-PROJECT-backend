@@ -65,6 +65,7 @@ Route::patch('/currency/{id}',[currencyController::class,'editCurrency']);
 Route::delete('/currency/{id}',[currencyController::class,'deleteCurrency']);
 
 //Recurrings Routes
+Route::get('/recurrings/totals',[RecurringController::class,'GetTotal']);
 Route::get('/recurrings',[RecurringController::class,'index']);
 Route::get('/recurrings/{id}',[RecurringController::class,'show']);
 Route::post('/recurrings',[RecurringController::class,'store']);

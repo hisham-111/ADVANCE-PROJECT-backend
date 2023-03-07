@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Recurring;
 use App\Models\Currency;
+use App\Models\category;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class RecurringController extends Controller
 {
@@ -13,9 +15,9 @@ class RecurringController extends Controller
 
     public function index(Request $request)
     {
-        $pagination = $request->input('pagination') || 2;
-        $recurring = Recurring::with('currency')->orderBy('start_date', 'desc')->paginate($pagination);
-        
+        $pagination = $request->input('pagination') ?? 2;
+        $recurring = Recurring::with('currency', 'category')->orderBy('start_date', 'desc')->paginate($pagination);
+
         //*********querry currency********* */
         if ($request->has('currency')) {
             $currency = $request->input('currency');
@@ -23,15 +25,28 @@ class RecurringController extends Controller
                 $query->where('name', $currency);
             })->orderBy('start_date', 'desc')->paginate($pagination);
         }
-        
+
         //*********querry income/outcome********* */
-        // if ($request->has('typeCode')) {
-        //     $typeCode = $request->input('typeCode');
-        //     $recurring = Recurring::whereHas('category', function ($query) use ($typeCode) {
-        //         $query->where('typeCode', $typeCode);
-        //     })->orderBy('start_date', 'desc')->paginate($pagination);
-        // }
-        
+        if ($request->has('type_code')) {
+            $type_code = $request->input('type_code');
+            // $week = $request->input('week');
+            // $month = $request->input('month');
+            // $year = $request->input('year');
+            $recurring = Recurring::whereHas('category', function ($query) use ($type_code) {
+                $query->where('type_code', $type_code);
+            })->orderBy('start_date', 'desc')->paginate($pagination);
+
+            // if ($week) { 
+            //     $recurring = Recurring::whereWeek('start_date', $week)->orderBy('start_date', 'desc')->paginate($pagination)->get();
+            // }
+            // if ($month) { 
+            //     $recurring = Recurring::whereMonth('start_date', $month)->orderBy('start_date', 'desc')->paginate($pagination)->get();
+            // }
+            // if ($year) { 
+            //     $recurring = Recurring::whereYear('start_date', $year)->get()->orderBy('start_date', 'desc')->paginate($pagination);
+            // }
+        }
+
 
         return response()->json([
             'status' => 201,
@@ -52,6 +67,38 @@ class RecurringController extends Controller
 
     }
 
+    public function GetTotal(Request $request)
+    {
+        $type_code = $request->input('type_code');
+        $now = Carbon::now()->format('Y-m-d');
+        $start_month = Carbon::now()->startOfMonth()->format('Y-m-d');
+        $end_month = Carbon::now()->endOfMonth()->format('Y-m-d');
+        $start_year = Carbon::now()->startOfYear()->format('Y-m-d');
+        $end_year = Carbon::now()->endOfYear()->format('Y-m-d');
+
+        $this_day = Recurring::whereHas('category', function ($query) use ($type_code) {
+            $query->where('type_code', $type_code);
+        })->whereDate('start_date', $now)->sum('amount');
+        
+        $this_month = Recurring::whereHas('category', function ($query) use ($type_code) {
+            $query->where('type_code', $type_code);
+        })->whereDate('start_date', '<=', $end_month)->whereDate('start_date', ">=", $start_month)->sum('amount');
+        
+        $this_year = Recurring::whereHas('category', function ($query) use ($type_code) {
+            $query->where('type_code', $type_code);
+        })->whereDate('start_date', '<=', $end_year)->whereDate('start_date', ">=", $start_year)->sum('amount');
+        
+        $current = Recurring::whereHas('category', function ($query) use ($type_code) {
+            $query->where('type_code', $type_code);
+        })->sum('amount');
+
+        return response()->json([
+            'status' => 201,
+            'message' => "recurrings",
+            'data' => ["this_day" => $this_day, "this_month" => $this_month, "this_year" => $this_year, "current" => $current]
+        ]);
+    }
+
     //********create Recurring******** */
     public function store(Request $request)
     {
@@ -63,15 +110,15 @@ class RecurringController extends Controller
         $end_date = $request->input('end_date');
         $currency_id = $request->input('currency_id');
         $currency = Currency::find($currency_id);
-        // $category_id=$request->input('category_id');
-        //$category = Cayegory::find($category_id);
+        $category_id = $request->input('category_id');
+        $category = category::find($category_id);
 
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:100',
             'description' => 'required|string|max:250',
             'amount' => 'required|numeric|gt:0',
             'currency_id' => 'required|integer|min:1|exists:currencies,id',
-            // 'category_id' => 'required|integer|min:1|exists:categories,id',
+            'category_id' => 'required|integer|min:1|exists:categories,id',
             "start_date" => 'required|date_format:Y-m-d',
             "end_date" => 'required|date_format:Y-m-d|after:start_date',
         ]);
@@ -84,7 +131,7 @@ class RecurringController extends Controller
         $recurring->description = $description;
         $recurring->amount = $amount;
         $recurring->currency()->associate($currency);
-        //$recurring->category()->associate($category);
+        $recurring->category()->associate($category);
         $recurring->start_date = $start_date;
         $recurring->end_date = $end_date;
 
@@ -107,7 +154,7 @@ class RecurringController extends Controller
             'description' => 'string|max:250',
             'amount' => 'numeric|gt:0',
             'currency_id' => 'integer|min:1|exists:currencies,id',
-            // 'category_id' => 'integer|min:1|exists:categories,id',
+            'category_id' => 'integer|min:1|exists:categories,id',
             "start_date" => 'date_format:Y-m-d',
             "end_date" => 'date_format:Y-m-d|after:start_date',
         ]);
@@ -117,7 +164,7 @@ class RecurringController extends Controller
         }
 
         $recurring->update($inputs);
-        // $recurring = Recurring::with('currency')->get();
+        $recurring = Recurring::with('currency')->get();
         return response()->json([
             'message' => 'recurring edited successfully!',
             'recurring' => $recurring,
