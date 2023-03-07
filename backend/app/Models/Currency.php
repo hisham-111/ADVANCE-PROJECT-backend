@@ -10,13 +10,17 @@ class Currency extends Model
     use HasFactory;
     protected $fillable = [
         'rate',
-        'name',  
+        'name',
     ];
-    
+
     public function recurring(){
-        
+
 
         return $this->belongsToMany(Recurring::class);
     }
 
+    public function Goal()
+    {
+        return $this->hasOne(Goal::class);
+    }
 }

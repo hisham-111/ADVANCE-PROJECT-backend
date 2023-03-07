@@ -16,7 +16,7 @@ return new class extends Migration
             $table->decimal('amount');
             $table->unsignedBigInteger('currency_id');
             $table->foreign('currency_id')->references('id')->on('currencies');
-            $table->string('schedule');
+            $table->enum('schedule', ['weekly', 'monthly', 'annually']);
             $table->timestamps();
         });
     }
