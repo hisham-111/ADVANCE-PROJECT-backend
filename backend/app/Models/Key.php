@@ -5,18 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Currency extends Model
+class Key extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'rate',
-        'name',  
-    ];
-    
-    public function recurring(){
-        
 
-        return $this->belongsToMany(Recurring::class);
-    }
+    protected $fillable = [
+        'title',
+        'description',  
+    ];
 
 }

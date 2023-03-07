@@ -26,7 +26,7 @@ public function addFixedTransaction(Request $request)
             'schedule' => 'required|in:weekly,monthly,yearly',
             'fixed_key_id' => 'required|exists:fixed_key',
             'amount' => 'required|numeric',
-            'is_paid' =>  'required|boolean',
+            'is_paid' =>  'boolean',
             'currency_id'=> 'required|exists:currencies,id',
         ]);
         if($validator->fails()){
@@ -117,7 +117,7 @@ public function addFixedTransaction(Request $request)
         ]);
     }
 
-    public function getFixedTransaction(Request $request, $id) // returns a Currency by id
+    public function getFixedTransactionById(Request $request, $id) // returns a Currency by id
     {
         try {
             $fixed_transaction = FixedTransaction::findOrFail($id);
@@ -156,8 +156,10 @@ public function addFixedTransaction(Request $request)
         $query->where('is_paid', $request->input('is_paid'));
     }
 
-    $transactions = $query->get();
+    $perPage = $request->input('per_page') ?? 10; // set default per page as 10
 
+    $transactions = $query->paginate($perPage);
+    
     return response()->json($transactions);
 }
 
