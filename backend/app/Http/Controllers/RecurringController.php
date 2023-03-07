@@ -79,15 +79,15 @@ class RecurringController extends Controller
         $this_day = Recurring::whereHas('category', function ($query) use ($type_code) {
             $query->where('type_code', $type_code);
         })->whereDate('start_date', $now)->sum('amount');
-        
+
         $this_month = Recurring::whereHas('category', function ($query) use ($type_code) {
             $query->where('type_code', $type_code);
         })->whereDate('start_date', '<=', $end_month)->whereDate('start_date', ">=", $start_month)->sum('amount');
-        
+
         $this_year = Recurring::whereHas('category', function ($query) use ($type_code) {
             $query->where('type_code', $type_code);
         })->whereDate('start_date', '<=', $end_year)->whereDate('start_date', ">=", $start_year)->sum('amount');
-        
+
         $current = Recurring::whereHas('category', function ($query) use ($type_code) {
             $query->where('type_code', $type_code);
         })->sum('amount');
@@ -136,6 +136,7 @@ class RecurringController extends Controller
         $recurring->end_date = $end_date;
 
         $recurring->save();
+        $recurring->load('currency', 'category');
         return response()->json([
             'message' => 'recurring added successfully!',
             'recurring' => $recurring
@@ -147,7 +148,7 @@ class RecurringController extends Controller
     {
         $recurring = Recurring::findOrFail($id);
         $inputs = $request
-            ->except('category', '_method')
+            ->except('_method')
         ;
         $validator = Validator::make($request->all(), [
             'title' => 'string|max:100',
@@ -164,7 +165,7 @@ class RecurringController extends Controller
         }
 
         $recurring->update($inputs);
-        $recurring = Recurring::with('currency')->get();
+        $recurring->load('currency', 'category');
         return response()->json([
             'message' => 'recurring edited successfully!',
             'recurring' => $recurring,
@@ -173,7 +174,7 @@ class RecurringController extends Controller
     }
 
     //********Delete Recurring******** */
-    public function delete(Request $request, $id)
+    public function destroy(Request $request, $id)
     {
 
         $recurring = Recurring::findOrFail($id);

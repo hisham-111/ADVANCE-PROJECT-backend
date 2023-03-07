@@ -70,7 +70,7 @@ Route::get('/recurrings',[RecurringController::class,'index']);
 Route::get('/recurrings/{id}',[RecurringController::class,'show']);
 Route::post('/recurrings',[RecurringController::class,'store']);
 Route::patch('/recurrings/{id}',[RecurringController::class,'edit']);
-Route::delete('/recurrings/{id}',[RecurringController::class,'delete']);
+Route::delete('/recurrings/{id}',[RecurringController::class,'destroy']);
 
 //Cataegories Routes
 Route::get('/categories',[categoryController::class,'getAllCategory']);
