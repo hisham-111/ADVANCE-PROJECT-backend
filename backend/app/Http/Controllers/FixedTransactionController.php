@@ -117,7 +117,7 @@ public function addFixedTransaction(Request $request)
         ]);
     }
 
-    public function getFixedTransaction(Request $request, $id) // returns a Currency by id
+    public function getFixedTransactionById(Request $request, $id) // returns a Currency by id
     {
         try {
             $fixed_transaction = FixedTransaction::findOrFail($id);
