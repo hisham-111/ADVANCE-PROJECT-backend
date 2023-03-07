@@ -18,5 +18,8 @@ class Currency extends Model
 
         return $this->hasMany(Recurring::class);
     }
+    public function fixedTransaction(){
+        return $this->hasMany(FixedTransaction::class);
+    }
 
 }

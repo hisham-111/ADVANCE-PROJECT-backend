@@ -10,9 +10,25 @@ class FixedTransaction extends Model
     use HasFactory;
     protected $fillable = [
         'start_date',
-        'amount',  
+        'amount',
         'schedule',
         'is_paid',
         'next_payment_date',
     ];
+    public function currency()
+    {
+
+
+        return $this->belongsTo(Currency::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(category::class);
+    }
+
+    public function fixedKey()
+    {
+        return $this->belongsTo(Key::class);
+    }
 }

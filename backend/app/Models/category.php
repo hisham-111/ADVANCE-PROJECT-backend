@@ -12,10 +12,14 @@ class category extends Model
         'name',
         'type_code',
     ];
-    public function recurring(){
-        
+    public function recurring()
+    {
+
 
         return $this->hasMany(Recurring::class);
     }
-
+    public function fixedTransaction()
+    {
+        return $this->hasMany(FixedTransaction::class);
+    }
 }

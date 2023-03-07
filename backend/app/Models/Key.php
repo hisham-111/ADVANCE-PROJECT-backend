@@ -13,5 +13,7 @@ class Key extends Model
         'title',
         'description',  
     ];
-
+    public function fixedTransaction(){
+        return $this->hasMany(FixedTransaction::class);
+    }
 }
