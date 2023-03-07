@@ -13,6 +13,7 @@ class categoryController extends Controller
     public function addCategory(Request $request){
         $category = new category();
         $request->validate([
+            'name'=>'required|max:100',
             'type_code' => 'required|in:incomes,expenses'
         ]);
         $category->name = $request->input('name');

@@ -63,9 +63,6 @@ Route::Patch('/key/{id}',[KeyController::class,'editFixed_Key']);
 // });
 
 
-
-
-
 //Currency Routes
 Route::get('/currency',[currencyController::class,'getAllCurrency']);
 Route::get('/currency/{id}',[currencyController::class,'getCurrency']);
@@ -75,11 +72,12 @@ Route::delete('/currency/{id}',[currencyController::class,'deleteCurrency']);
 
 
 //Recurrings Routes
+Route::get('/recurrings/totals',[RecurringController::class,'GetTotal']);
 Route::get('/recurrings',[RecurringController::class,'index']);
 Route::get('/recurrings/{id}',[RecurringController::class,'show']);
 Route::post('/recurrings',[RecurringController::class,'store']);
 Route::patch('/recurrings/{id}',[RecurringController::class,'edit']);
-Route::delete('/recurrings/{id}',[RecurringController::class,'delete']);
+Route::delete('/recurrings/{id}',[RecurringController::class,'destroy']);
 
 
 //Cataegories Routes
@@ -95,3 +93,4 @@ Route::get('/goal/{id}',[GoalController::class,'getGoal']);
 Route::post('/goal',[GoalController::class,'addGoal']);
 Route::patch('/goal/{id}',[GoalController::class,'editGoal']);
 Route::delete('/goal/{id}',[GoalController::class,'deleteGoal']);
+
