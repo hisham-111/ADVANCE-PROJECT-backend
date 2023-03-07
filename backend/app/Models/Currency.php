@@ -16,7 +16,7 @@ class Currency extends Model
     public function recurring(){
         
 
-        return $this->belongsToMany(Recurring::class);
+        return $this->hasMany(Recurring::class);
     }
 
 }
